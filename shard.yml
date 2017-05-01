@@ -1,0 +1,16 @@
+name: prefixer
+version: __VERSION__
+
+authors:
+  - rdupz <romainduperre@gmail.com>
+
+description: |
+  Prefix filenames with ease.
+
+crystal: 0.21.0
+
+targets:
+  shards:
+    main: src/main.cr
+
+license: MIT

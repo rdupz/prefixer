@@ -1,0 +1,105 @@
+.\" Manpage for prefixer.
+.TH PREFIXER 1 "__DATE__" "__VERSION__" "prefixer"
+.SH NAME
+.B prefixer
+\-\- Renames a file by changing the beginning of its name.
+.SH SYNOPSIS
+.B prefixer
+[\fB\-vdh\fR]
+[\fB\-b\fR | [\fB\-so\fR | \fB\-n\fR]]
+[\fB\-c\fR \fIconfig\fR]
+[\fB\-r\fR \fIregex\fR]
+\fIprefix\fR \fIfile\fR \fI...\fR
+.SH DESCRIPTION
+.B prefixer
+provides a convenient way to deal with prefixes in filenames. By defining a set
+of prefixes,
+.B prefixer
+is able to identify the current prefix(es) in the filename and to change it to
+\fIprefix\fR.
+The optional arguments allow to filter the input \fIfiles\fR
+and/or to choose how the prefix(es) are processed.
+.PP
+The first mandatory argument \fIprefix\fR is the one to applied on the
+filenames.
+The other mandatory argument \fIfile\fR is the file to be renamed. Several files
+can be specified. Directories and links are processed like any other files.
+.SH CONFIGURATION
+In order to define the set of prefixes to be used, you \fBcan\fR fill at
+least one configuration file. The default configuration files are located (or may
+be created) at \fI/etc/prefixer/prefixer.conf\fR (system-wide) and
+\fI$HOME/.prefixer.conf\fR (per-user). The per-user configuration file overrides
+the system-wide configuration file. A random file can be used as the
+configuration file with the \fB--config\fR option: the specified file then
+overrides all the other configuration files.
+.PP
+In a configuration file, \fBthe content of one line is interpreted as one
+prefix\fR. To define a set of prefixes on a single line, you can use a
+Perl regex: the syntax is /regex/. For example a line matching a word ending
+with - would contains : "/\\w+-/".
+Lines containing only whitespaces are ignored.
+Prefixes containing forward slashes will raise an error.
+There are no other limitations.
+.PP
+To define a one-shot set of prefixes the \fB--regex\fR option should be used.
+It overrides all other configurations.
+.SH OPTIONS
+.PP
+The following options are available:
+.TP
+.BR \-b ", " \-\-blind
+Blind mode set the prefix regardless the filename.
+Keep all existing prefixes and add \fIprefix\fR before them.
+.TP
+.BR \-n ", " \-\-no\-update
+Do not set \fIprefix\fR if other prefixes already exist.
+.TP
+.BR \-o ", " \-\-update\-only
+Rename file only if at least one prefix already exists.
+.TP
+.BR \-s ", " \-\-squash
+Replace all prefixes with the single new one.
+.TP
+.BR \-c ", " \-\-config =\fIconfig\fR
+Explicitly defines the configuration file.
+.TP
+.BR \-r ", " \-\-regex =\fIregex\fR
+Override allowed prefixes with regex.
+.TP
+.BR \-d ", " \-\-dry\-run
+Perform a dry-run. Enable verbose mode.
+.TP
+.BR \-v ", " \-\-verbose
+Verbose mode.
+.TP
+.BR \-h ", " \-\-help
+Show this help.
+.SH EXIT STATUS
+The
+.B prefixer
+utility exits 0 on success, and >0 if an error occurs.
+.SH EXAMPLES
+Here is the best part.
+.TP
+In these examples the configuration defines 3 prefixes: \fBA-\fR, \fBB-\fR, \fBC-\fR.
+.IP "$ prefixer A- foo-bar"
+Renames foo in A-foo-bar.
+.IP "$ prefixer A- B-C-foo-bar"
+Renames B-C-foo in A-C-foo-bar.
+.IP "$ prefixer --dry-run --squash --update-only A- B-C-foo-bar foobar"
+Shows that prefixer would rename B-C-foo in A-foo-bar and ignore foobar.
+.IP "$ prefixer --blind A- B-C-foo-bar"
+Renames B-C-foo in A-B-C-foo-bar.
+.IP "$ prefixer --regex 'X-\|Y-\|Z-' --no-update Z- X-foo-bar"
+Does not update X-foo-bar because "X-" is a prefix matching the regex.
+A-, B- and C- are no longer prefixes.
+.SH SEE ALSO
+rename(1), mv(1)
+.SH BUGS
+No known bugs.
+.PP
+Note however that
+.B prefixer is still in development, and may not work as expected.
+If you have any problems with it, please feel free to email me and let me know.
+.SH AUTHOR
+Romain Duperr\[u00E9] (romainduperre@gmail.com)

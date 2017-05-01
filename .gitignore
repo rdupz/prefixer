@@ -1,0 +1,6 @@
+/doc/
+/libs/
+/.crystal/
+/.shards/
+/main
+.DS_Store
